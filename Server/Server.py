@@ -26,8 +26,6 @@ def get_restaurant():
 
 @app.route('/guess', methods=["GET"])
 def guess():
-    print(session["name"])
-    print(unquote_plus(request.args.get("guess")))
     # Make a guess for the restaurant, return Y or N
     if not session["name"]:
         # This should not happen, as this should not be called until a restaurant is already chosen
@@ -42,8 +40,8 @@ def get_menu_item():
     if not session["link"]:
         # This should not happen, as this should not be called until a restaurant is already chosen
         return "ERROR, user restaurant is not selected"
-    menu = Scraper.get_menu(session["link"])
     
+    menu = Scraper.get_menu(session["link"])
     return secrets.choice(menu)
 
 @app.route('/')
