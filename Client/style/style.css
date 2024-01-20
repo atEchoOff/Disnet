@@ -1,0 +1,81 @@
+/* This file was written almost entirely with chat GPT, and with minor modifications */
+
+body, input, button {
+    font-family: george;
+}
+
+body {
+    text-align: center;
+    font-size: 20px;
+    margin: 20px;
+    background-color: #001f3f;
+    color: #fff;
+    transition-property: background-color;
+    transition-timing-function:ease;
+    transition-duration:.5s;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 20px;
+    border: none;
+    background-color: #0074cc;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+button:hover {
+    background-color: #00509e;
+}
+#menu-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menu-card {
+    background-color: #004080;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+#guess-input {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 20px;
+    color: #001f3f;
+    border: 1px solid #004080;
+    border-radius: 5px;
+    text-align: center;
+}
+#matching-restaurants {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #bbb;
+}
+
+#matching-restaurants div {
+    display: flex;
+    color:yellow;
+    white-space:pre;
+    cursor:pointer;
+}
+
+#matching-restaurants div:hover {
+    background-color: #003264;
+}
+
+#matching-restaurants div span {
+    flex: 1;
+}
+
+#matching-restaurants div span:first-of-type {
+    text-align: right;
+    color:white;
+}
+
+#matching-restaurants div span:last-of-type {
+    text-align:left;
+    color:white;
+}

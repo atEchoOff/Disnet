@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            /* Required to get url_for to work */
+            font-family: george;
+            src: url({{ url_for('static', filename='style/GeorgeRoundedRegular.ttf')}});
+        }
+    </style>
+    <link rel="stylesheet" href="{{url_for('static', filename='style/style.css')}}">
+    <title>Disnet</title>
+</head>
+<body>
+
+<!-- Load an item onto menu -->
+<button onclick="getMenuItem()">Get New Item</button>
+
+<!-- Store menu items -->
+<div id="menu-container"></div>
+
+<!-- Make guesses -->
+<input type="text" id="guess-input" oninput="updateMatchingRestaurants()" placeholder="Enter your guess">
+
+<!-- Store the restaurants close to the input -->
+<div id="matching-restaurants"></div>
+
+<script>
+    // Scripts must be here for url_for to work
+    const body = document.getElementsByTagName("body")[0];
+    const guessInput = document.getElementById("guess-input");
+    const matchingRestaurants = document.getElementById("matching-restaurants");
+    const menuContainer = document.getElementById("menu-container");
+    let currentIndex = 0; // the current menu item index
+
+    // Get the restaurants from the server
+    let restaurants;
+    fetch('{{url_for("get_restaurant_list")}}')
+            .then((response) => response.text().then((text) => {
+                restaurants = JSON.parse(text);
+    }));
+
+    function getMenuItem() {
+        // Ask the server for a new menu item, stylize and render it
+        fetch('{{url_for("get_menu_item")}}')
+                .then((response) => response.text().then((menuItem) => {
+                    const menuCard = document.createElement("div");
+                    menuCard.className = "menu-card";
+                    menuCard.textContent = menuItem;
+                    menuContainer.appendChild(menuCard);
+                    currentIndex++;
+        }));
+    }
+
+    function updateMatchingRestaurants() {
+        // Render the restaurants which have a title that contains the entered text
+        const typedText = guessInput.value.toLowerCase();
+
+        // FIXME if nothing is here, show all restaurants
+
+        // Find all restaurants that match entered guess, save indices in the restaurant list
+        const matchingList = restaurants.map((restaurant, idx) => [restaurant, idx])
+                                        .filter(item => item[0].toLowerCase().includes(typedText));
+
+        // Format each into HTML, and display on the page
+        const formattedList = matchingList.map(item => getFormattedMatchingRestaurant(item[0].toLowerCase(), typedText, item[1]));
+        matchingRestaurants.innerHTML = formattedList.join('');
+    }
+
+    function getFormattedMatchingRestaurant(item, typedText, indexOfRestaurant) {
+        // Stylize the restaurant
+        // The matching substring will be centered and colored
+        const index = item.indexOf(typedText);
+
+        if (index != -1) {
+            const before = item.substring(0, index);
+            const match = item.substring(index, index + typedText.length);
+            const after = item.substring(index + typedText.length);
+
+            return `
+            <div onclick="guess(event)" id=${indexOfRestaurant}>
+                <span>${before}</span>${match}<span>${after}</span>
+            </div>`;
+        } else {
+            return '';
+        }
+    }
+
+    function guess(e) {
+        // User made a guess by clicking a restaurant. Ask the server if it is right
+
+        // Clean up the guess
+        let guess = e.target.parentElement.textContent.trim();
+
+        // Ask the server for the result
+        fetch("{{url_for('guess', guess='PLACEGUESSHERE')}}".replace("PLACEGUESSHERE", guess))
+            .then((response) => response.text().then((text) => {
+                if (text === "Y") {
+                    // Guess is correct!
+                    // Make the background green
+                    body.style.backgroundColor = "#00FF00";
+                } else {
+                    // Guess is incorrect
+                    // Delete incorrect guess from list
+                    restaurants.splice(e.target.parentElement.id, 1);
+                    updateMatchingRestaurants();
+
+                    // Flash red, slide back to blue
+                    body.style.transitionDuration = ".1s";
+                    body.style.backgroundColor = "#FF0000";
+                    setTimeout(() => {
+                        body.style.transitionDuration = ".5s";
+                        body.style.backgroundColor = "#001f3f";
+                    }, 500);
+                }
+    }));
+    }
+</script>
+
+</body>
+</html>

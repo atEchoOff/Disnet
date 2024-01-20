@@ -7,22 +7,21 @@ headers = {
 }
 
 oneDay = timedelta(days=1)
-lastCall = dict()
-
 
 def memoize(func):
     # Build a version of a function which stores the return value
     # Only rerun func if the last run of the function is more than a day ago
-    lastCall = None
+    lastCall = dict()
     ret = None
-    def memoized(*args, **kwargs):
+    def memoized(*args):
         nonlocal lastCall
         nonlocal ret
         now = datetime.now()
-        if lastCall == None or now - lastCall > oneDay:
+        if args not in lastCall or now - lastCall[args] > oneDay:
             # Only call function if it hasnt been run or it was run more than a day ago
-            lastCall = now
-            ret = func(*args, **kwargs)
+            print("Calling", func)
+            lastCall[args] = now
+            ret = func(*args)
         return ret
     return memoized
 
@@ -37,9 +36,17 @@ def restaurant_list():
     for restaurant in restaurants:
         a = restaurant.find("a")
         link = a.get("href")
-        name = a.decode_contents()
-        ret.append((name, link))
+        name = a.text
+        if "<" not in name and ">" not in name:
+            # Some restaurants have stupid names, like End Zone Food Court - Lunch/Dinner Updated. Get rid of everything after -
+            name = name.split("-")[0].strip()
+            ret.append((name, link))
     return ret
+
+@memoize
+def restaurant_name_list():
+    # Return only a list of restaurant names, no duplicates
+    return list(set(restaurant[0] for restaurant in restaurant_list()))
 
 @memoize
 def get_menu(link):
@@ -50,5 +57,7 @@ def get_menu(link):
 
     for item in items:
         span = item.find("span")
-        ret.append(span.decode_contents())
+        name = span.text
+        if "<" not in name and ">" not in name:
+            ret.append(name)
     return ret
