@@ -18,14 +18,23 @@
 <!-- Load an item onto menu -->
 <button onclick="getMenuItem()">Get New Item</button>
 
-<!-- Store menu items -->
-<div id="menu-container"></div>
+<div>
+    <div class="column">
+        <!-- Store menu items -->
+        <div id="menu-background">
+            <h1 id="menu-title" style="color:black;">Menu (0 items)</h1>
+            <div id="menu-container"></div>
+        </div>
+    </div>
 
-<!-- Make guesses -->
-<input type="text" id="guess-input" oninput="updateMatchingRestaurants()" placeholder="Enter your guess">
+    <div class="column">
+        <!-- Make guesses -->
+        <input type="text" id="guess-input" oninput="updateMatchingRestaurants()" placeholder="Enter your guess">
 
-<!-- Store the restaurants close to the input -->
-<div id="matching-restaurants"></div>
+        <!-- Store the restaurants close to the input -->
+        <div id="matching-restaurants"></div>
+    </div>
+</div>
 
 <script>
     // Scripts must be here for url_for to work
@@ -33,6 +42,7 @@
     const guessInput = document.getElementById("guess-input");
     const matchingRestaurants = document.getElementById("matching-restaurants");
     const menuContainer = document.getElementById("menu-container");
+    const menuTitle = document.getElementById("menu-title");
     let currentIndex = 0; // the current menu item index
 
     // Get the restaurants from the server
@@ -51,6 +61,7 @@
                     menuCard.textContent = menuItem;
                     menuContainer.appendChild(menuCard);
                     currentIndex++;
+                    menuTitle.innerText = "Menu (" + currentIndex + " items)";
         }));
     }
 
