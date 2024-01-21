@@ -42,7 +42,7 @@ body {
 
 .column {
     width:50%;
-    float:left;
+    float:right;
     height:100%;
     overflow-y:hidden;
 }
