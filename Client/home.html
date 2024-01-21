@@ -11,6 +11,7 @@
         }
     </style>
     <link rel="stylesheet" href="{{url_for('static', filename='style/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='style/button.css')}}">
     <title>Disnet</title>
 </head>
 <body>
@@ -18,12 +19,26 @@
 <div id="overlay">
     <div id="overlay-message-container">
         <p id="overlay-message">Welcome to Disnet! The game is simple: you are given a random Disney restaurant menu. You can reveal the menu items one at a time, increasing the size of the viewable menu, by clicking the button at the top. Your goal is simple: guess the Disney restaurant using the right side of the window!</p>
-        <button onclick="startGame()">Start New Game</button>
+        <!-- Pretty button: https://www.joshwcomeau.com/animation/3d-button/ -->
+        <button class="pushable" onclick="startGame()">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front">
+                Start New Game
+            </span>
+        </button>
     </div>
 </div>
 
 <!-- Load an item onto menu -->
-<button disabled onclick="getMenuItem()" id="menu-button">Get New Item</button>
+<!-- Pretty button: https://www.joshwcomeau.com/animation/3d-button/ -->
+<button class="pushable" disabled onclick="getMenuItem()" id="menu-button">
+    <span class="shadow"></span>
+    <span class="edge"></span>
+    <span class="front">
+        Get New Item
+    </span>
+</button>
 
 <div>
     <div class="column">

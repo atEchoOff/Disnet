@@ -15,19 +15,6 @@ body {
     transition-duration:.5s;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 20px;
-    border: none;
-    background-color: #0074cc;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-button:hover {
-    background-color: #00509e;
-}
-
 #overlay {
     position: fixed;
     top: 0;
