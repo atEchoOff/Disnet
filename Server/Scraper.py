@@ -13,7 +13,7 @@ one_day = timedelta(days=1)
 def restaurant_list():
     # Return a list of disney restaurants (name and link to it)
     ret = []
-    RESTAURANTS_URL = "https://allears.net/dining/menu/"
+    RESTAURANTS_URL = "https://allears.net/dining/menu/search/all/all/breakfast,brunch,dessert,dinner,lunch/all/"
     restaurants_page = BeautifulSoup(requests.get(RESTAURANTS_URL, headers=headers).content, "html.parser")
     restaurants = restaurants_page.find_all(class_="dining-card-slide")
 
