@@ -1,31 +1,15 @@
 import requests
+from datetime import timedelta
+from Utils import memoize_for_time
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", 
 }
 
-oneDay = timedelta(days=1)
+one_day = timedelta(days=1)
 
-def memoize(func):
-    # Build a version of a function which stores the return value
-    # Only rerun func if the last run of the function is more than a day ago
-    lastCall = dict()
-    ret = None
-    def memoized(*args):
-        nonlocal lastCall
-        nonlocal ret
-        now = datetime.now()
-        if args not in lastCall or now - lastCall[args] > oneDay:
-            # Only call function if it hasnt been run or it was run more than a day ago
-            print("Calling", func)
-            lastCall[args] = now
-            ret = func(*args)
-        return ret
-    return memoized
-
-@memoize
+@memoize_for_time(one_day)
 def restaurant_list():
     # Return a list of disney restaurants (name and link to it)
     ret = []
@@ -43,12 +27,12 @@ def restaurant_list():
             ret.append((name, link))
     return ret
 
-@memoize
+@memoize_for_time(one_day)
 def restaurant_name_list():
     # Return only a list of restaurant names, no duplicates
     return list(set(restaurant[0] for restaurant in restaurant_list()))
 
-@memoize
+@memoize_for_time(one_day)
 def get_menu(link):
     # Get the menu of a restaurant given its link
     ret = []

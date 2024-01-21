@@ -16,7 +16,7 @@
 <body>
 
 <!-- Load an item onto menu -->
-<button onclick="getMenuItem()">Get New Item</button>
+<button disabled onclick="getMenuItem()" id="menu-button">Get New Item</button>
 
 <div>
     <div class="column">
@@ -43,14 +43,31 @@
     const matchingRestaurants = document.getElementById("matching-restaurants");
     const menuContainer = document.getElementById("menu-container");
     const menuTitle = document.getElementById("menu-title");
+    const button = document.getElementById("menu-button");
     let currentIndex = 0; // the current menu item index
+    let restaurants; // List of all restaurants, removed as incorrect guesses are made
+    let menuSize = 0; // Size of total restaurant menu
 
-    // Get the restaurants from the server
-    let restaurants;
-    fetch('{{url_for("get_restaurant_list")}}')
+    function setMenuTitleText() {
+        menuTitle.innerText = "Menu (" + currentIndex + " items out of " + menuSize + " shown)";
+    }
+
+    function startGame() {
+        // Initialize restaurant on the server
+        fetch('{{url_for("get_restaurant_list")}}')
             .then((response) => response.text().then((text) => {
                 restaurants = JSON.parse(text);
-    }));
+        }));
+
+        // Initialize restaurant on server, show menu text and enable menu button
+        fetch('{{url_for("get_restaurant")}}')
+            .then((response) => response.text().then((text) => {
+                menuSize = parseInt(text);
+                setMenuTitleText();
+                button.disabled = false;
+        }));
+    }
+    startGame();
 
     function getMenuItem() {
         // Ask the server for a new menu item, stylize and render it
@@ -61,7 +78,11 @@
                     menuCard.textContent = menuItem;
                     menuContainer.appendChild(menuCard);
                     currentIndex++;
-                    menuTitle.innerText = "Menu (" + currentIndex + " items)";
+                    if (currentIndex === menuSize) {
+                        // We have hit the limit, disable the button
+                        button.disabled = true;
+                    }
+                    setMenuTitleText();
         }));
     }
 
