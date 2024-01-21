@@ -21,8 +21,8 @@ def memoize_for_time(td):
                 # If td is none:
                 # Only run function if not called before
                 print("Calling", func)
-                lastCall[args] = now
                 ret[args] = func(*args)
+                lastCall[args] = now
             return ret[args]
         return memoized
     return memoize
