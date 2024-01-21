@@ -15,6 +15,13 @@
 </head>
 <body>
 
+<div id="overlay">
+    <div id="overlay-message-container">
+        <p id="overlay-message">Welcome to Disnet! The game is simple: you are given a random Disney restaurant menu. You can reveal the menu items one at a time, increasing the size of the viewable menu, by clicking the button at the top. Your goal is simple: guess the Disney restaurant using the right side of the window!</p>
+        <button onclick="startGame()">Start New Game</button>
+    </div>
+</div>
+
 <!-- Load an item onto menu -->
 <button disabled onclick="getMenuItem()" id="menu-button">Get New Item</button>
 
@@ -44,16 +51,22 @@
     const menuContainer = document.getElementById("menu-container");
     const menuTitle = document.getElementById("menu-title");
     const button = document.getElementById("menu-button");
-    let currentIndex = 0; // the current menu item index
+    const overlay = document.getElementById("overlay");
+    const overlayMessage = document.getElementById("overlay-message");
+    let currentIndex; // the current menu item index
     let restaurants; // List of all restaurants, removed as incorrect guesses are made
-    let menuSize = 0; // Size of total restaurant menu
+    let menuSize; // Size of total restaurant menu
 
     function setMenuTitleText() {
         menuTitle.innerText = "Menu (" + currentIndex + " items out of " + menuSize + " shown)";
     }
 
     function startGame() {
-        // Initialize restaurant on the server
+        menuContainer.innerHTML = "";
+        currentIndex = 0;
+        menuSize = 0;
+        
+        // Get restaurant list from server
         fetch('{{url_for("get_restaurant_list")}}')
             .then((response) => response.text().then((text) => {
                 restaurants = JSON.parse(text);
@@ -64,10 +77,12 @@
             .then((response) => response.text().then((text) => {
                 menuSize = parseInt(text);
                 setMenuTitleText();
+
+                // Enable the menu button and hide the welcome screen
                 button.disabled = false;
+                overlay.style.display = 'none';
         }));
     }
-    startGame();
 
     function getMenuItem() {
         // Ask the server for a new menu item, stylize and render it
@@ -129,11 +144,7 @@
         // Ask the server for the result
         fetch("{{url_for('guess', guess='PLACEGUESSHERE')}}".replace("PLACEGUESSHERE", guess))
             .then((response) => response.text().then((text) => {
-                if (text === "Y") {
-                    // Guess is correct!
-                    // Make the background green
-                    body.style.backgroundColor = "#00FF00";
-                } else {
+                if (text === "N") {
                     // Guess is incorrect
                     // Delete incorrect guess from list
                     restaurants.splice(e.target.parentElement.id, 1);
@@ -146,6 +157,16 @@
                         body.style.transitionDuration = ".5s";
                         body.style.backgroundColor = "#001f3f";
                     }, 500);
+                } else {
+                    // Guess is correct!
+                    // Result from server is of form {menu_len},{guess_len}
+                    // Show results on overlay
+                    let [menu_len, guess_len] = text.split(",");
+                    overlayMessage.innerHTML = `Congratulations! The restaurant was <b>${guess}</b>! It only took you ${guess_len} guesses and ${menu_len} menu items! Try again to see if you can do better!`
+                    overlay.style.display = "flex";
+
+                    // Make the background green
+                    body.style.backgroundColor = "#00FF00";
                 }
     }));
     }
