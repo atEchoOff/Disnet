@@ -15,10 +15,10 @@ def set_new_restaurant(restaurant):
     session["menu_count"] = 0
     session["guess_count"] = 0
 
-    # Find a number which is not a factor of the restaurant menu size
+    # Find a number which is relatively prime to the menu length
     # This will allow element menu items to be unique
     menu_len = len(Scraper.get_menu(restaurant[1]))
-    session["menu_key"] = Utils.get_nonfactor(menu_len)
+    session["menu_key"] = Utils.get_relprime(menu_len)
     return str(menu_len)
 
 @app.route('/restaurant/list')

@@ -28,10 +28,18 @@ def memoize_for_time(td):
     return memoize
 
 @memoize_for_time(None)
-def get_nonfactors(n):
-    # Return a list of nonfactors of an integer n
-    return [p for p in range(2, n) if n % p != 0]
+def gcd(a, b):
+    # Get the gcd of a and b
+    if b == 0:
+        return a
+    
+    return gcd(b, a % b)
 
-def get_nonfactor(n):
-    # Return a number p < n so that p does not divide n
-    return secrets.choice(get_nonfactors(n))
+@memoize_for_time(None)
+def get_relprimes(n):
+    # Return a list of numbers p=2...n-1 which are relative prime to n
+    return [p for p in range(2, n) if gcd(p, n) == 1]
+
+def get_relprime(n):
+    # Return a number p < n which is relative prime to n
+    return secrets.choice(get_relprimes(n))
