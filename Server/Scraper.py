@@ -40,8 +40,8 @@ def get_menu(link):
     items = menu_page.find_all(class_="menuItems__item")
 
     for item in items:
-        span = item.find("span")
-        name = span.text
-        if "<" not in name and ">" not in name:
-            ret.append(name)
+        item_name = item.find(class_="item-title")
+        item_description = item.find(class_="item-description")
+        item_price = item.find(class_="item-price")
+        ret.append((item_name.text, item_description.text, item_price.text))
     return ret

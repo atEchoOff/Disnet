@@ -12,6 +12,8 @@
     </style>
     <link rel="stylesheet" href="{{url_for('static', filename='style/style.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='style/button.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='style/menu.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='style/matchingrestaurants.css')}}">
     <title>Disnet</title>
 </head>
 <body>
@@ -76,6 +78,7 @@
     const button = document.getElementById("menu-button");
     const overlay = document.getElementById("overlay");
     const overlayMessage = document.getElementById("overlay-message");
+    const menuBackground = document.getElementById("menu-background");
     let currentIndex; // the current menu item index
     let restaurants; // List of all restaurants, removed as incorrect guesses are made
     let menuSize; // Size of total restaurant menu
@@ -117,13 +120,36 @@
         }));
     }
 
+    function createMenuCard(title, description, price) {
+        // Create an element menu card given title, description, and price
+        const menuCard = document.createElement("div");
+        menuCard.className = "menu-item";
+
+        const itemTitle = document.createElement("div");
+        itemTitle.className = "menu-item-title";
+        itemTitle.innerText = title;
+
+        const itemDescription = document.createElement("div");
+        itemDescription.className = "menu-item-description";
+        itemDescription.innerText = description;
+
+        const itemPrice = document.createElement("div");
+        itemPrice.className = "menu-item-price";
+        itemPrice.innerText = price;
+
+        menuCard.appendChild(itemTitle);
+        menuCard.appendChild(itemDescription);
+        menuCard.appendChild(itemPrice);
+        return menuCard;
+    }
+
     function getMenuItem() {
         // Ask the server for a new menu item, stylize and render it
         fetch('{{url_for("get_menu_item")}}')
                 .then((response) => response.text().then((menuItem) => {
-                    const menuCard = document.createElement("div");
-                    menuCard.className = "menu-card";
-                    menuCard.textContent = menuItem;
+                    let [title, description, price] = menuItem.split("//");
+                    const menuCard = createMenuCard(title, description, price);
+                    console.log(title, description, price);
                     menuContainer.appendChild(menuCard);
                     currentIndex++;
                     if (currentIndex === menuSize) {
@@ -131,6 +157,9 @@
                         button.disabled = true;
                     }
                     setMenuTitleText();
+
+                    // Scroll to bottom of menu
+                    menuBackground.scrollTo(0, menuBackground.scrollHeight);
         }));
     }
 

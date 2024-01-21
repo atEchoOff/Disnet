@@ -13,6 +13,7 @@ body {
     transition-property: background-color;
     transition-timing-function:ease;
     transition-duration:.5s;
+    overflow:hidden;
 }
 
 #overlay {
@@ -43,46 +44,9 @@ body {
     width:50%;
     float:left;
     height:100%;
+    overflow-y:hidden;
 }
 
-#menu-background {
-    background-color:rgb(255, 249, 237);
-    height:90vh;
-    box-shadow:2px 10px 8px 5px #88888823;
-    border-radius:5px;
-}
-
-#menu-container {
-    margin-top: 20px;
-    display: flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    overflow-y:scroll;
-    overflow-x:hidden;
-}
-
-/* https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
-/* Hide scrollbar for Chrome, Safari and Opera */
-#menu-container::-webkit-scrollbar {
-    display: none;
-}
-  
-/* Hide scrollbar for IE, Edge and Firefox */
-#menu-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-  
-.menu-card {
-    background-color: #004080;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height:min-content;
-    width:max-content;
-}
 #guess-input {
     margin-top: 20px;
     padding: 10px;
@@ -91,49 +55,4 @@ body {
     border: 1px solid #004080;
     border-radius: 5px;
     text-align: center;
-}
-#matching-restaurants {
-    margin-top: 10px;
-    font-size: 20px;
-    color: #bbb;
-    overflow-y:scroll;
-    overflow-x:hidden;
-    height:90vh;
-}
-
-/* https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
-/* Hide scrollbar for Chrome, Safari and Opera */
-#matching-restaurants::-webkit-scrollbar {
-    display: none;
-}
-  
-/* Hide scrollbar for IE, Edge and Firefox */
-#matching-restaurants {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-#matching-restaurants div {
-    display: flex;
-    color:yellow;
-    white-space:pre;
-    cursor:pointer;
-}
-
-#matching-restaurants div:hover {
-    background-color: #003264;
-}
-
-#matching-restaurants div span {
-    flex: 1;
-}
-
-#matching-restaurants div span:first-of-type {
-    text-align: right;
-    color:white;
-}
-
-#matching-restaurants div span:last-of-type {
-    text-align:left;
-    color:white;
 }

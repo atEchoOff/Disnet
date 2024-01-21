@@ -58,7 +58,9 @@ def get_menu_item():
     menu_item = menu[session["menu_count"] * session["menu_key"] % len(menu)]
 
     session["menu_count"] += 1
-    return menu_item
+    # The returned menu item is a tuple (name, description, price)
+    # Return as // separated list
+    return "//".join(menu_item)
 
 @app.route('/giveup')
 def give_up():
