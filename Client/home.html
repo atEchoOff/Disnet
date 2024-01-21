@@ -40,6 +40,14 @@
     </span>
 </button>
 
+<button class="pushable" onclick="giveUp()" id="menu-button">
+    <span class="shadow"></span>
+    <span class="edge"></span>
+    <span class="front">
+        Give Up
+    </span>
+</button>
+
 <div>
     <div class="column">
         <!-- Store menu items -->
@@ -97,6 +105,15 @@
                 // Enable the menu button and hide the welcome screen
                 button.disabled = false;
                 overlay.style.display = 'none';
+        }));
+    }
+
+    function giveUp() {
+        // User pressed give up. Show popup window and restaurant name
+        fetch('{{url_for("give_up")}}')
+            .then((response) => response.text().then((restaurantName) => {
+                overlayMessage.innerHTML = `Too bad! The restaurant was <b>${restaurantName}</b>! Try again to see if you can do better!`
+                overlay.style.display = "flex";
         }));
     }
 

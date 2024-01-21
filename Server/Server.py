@@ -38,11 +38,12 @@ def guess():
     # Make a guess for the restaurant, return Y or N
     if not "name" in session:
         # This should not happen, as this should not be called until a restaurant is already chosen
-        return "ERROR, user restaurant is not selected"
+        return "N"
     
     session["guess_count"] += 1
     user_guess = unquote_plus(request.args.get("guess")).lower()
-    return "Y" if user_guess == session["name"].lower() else "N"
+    # Return {menu_count},{guess_count} if correct, N if incorrect
+    return f"{session['menu_count']},{session['guess_count']}" if user_guess == session["name"].lower() else "N"
 
 @app.route('/menu/random')
 def get_menu_item():
@@ -58,6 +59,16 @@ def get_menu_item():
 
     session["menu_count"] += 1
     return menu_item
+
+@app.route('/giveup')
+def give_up():
+    # User gave up, clear the session and return restaurant name
+    # We clear the session so that users cant go to /giveup and get the name to cheat
+    name = session["name"]
+    del session["name"]
+    del session["link"]
+    return name
+    
 
 @app.route('/')
 def home():
