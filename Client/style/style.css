@@ -6,7 +6,7 @@ body, input, button {
 
 body {
     text-align: center;
-    font-size: 20px;
+
     margin: 20px;
     background-color: #001f3f;
     color: #fff;
@@ -50,7 +50,7 @@ body {
 #guess-input {
     margin-top: 20px;
     padding: 10px;
-    font-size: 20px;
+    font-size:1.1rem;
     color: #001f3f;
     border: 1px solid #004080;
     border-radius: 5px;
