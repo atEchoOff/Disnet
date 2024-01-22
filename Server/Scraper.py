@@ -22,8 +22,13 @@ def restaurant_list():
         link = a.get("href")
         name = a.text
         if "<" not in name and ">" not in name:
-            # Some restaurants have stupid names, like "End Zone Food Court - Lunch/Dinner Updated". Get rid of everything after -
-            name = name.split("-")[0].strip()
+            data = name.split("-")
+            if len(data) > 1:
+                # There is info about the restaurant. Exclude children's menus (theyre too hard)
+                if "Child" in data[1]:
+                    continue
+            # Get rid of everything after -
+            name = data[0].strip()
             ret.append((name, link))
     return ret
 
